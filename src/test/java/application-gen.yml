@@ -1,0 +1,23 @@
+
+spring:
+  application:
+    name: code-gen
+  datasource:
+    url: jdbc:mariadb://192.168.56.11:3306/SAMPLES
+    username: aider
+    password: aider1234
+    driver-class-name: org.mariadb.jdbc.Driver
+  freemarker:
+    charset: UTF-8
+
+mybatis:
+    type-aliases-package: org.chiwooplatform.mybatis.model,org.chiwooplatform.gen.model
+    type-handlers-package: org.chiwooplatform.mybatis.handler
+    mapper-locations: classpath*:codegen/sql/mariadb/*.xml
+
+    configuration:
+        map-underscore-to-camel-case: false
+        default-fetch-size: 100
+        default-statement-timeout: 30
+        auto-mapping-behavior: partial
+        auto-mapping-unknown-column-behavior: warning

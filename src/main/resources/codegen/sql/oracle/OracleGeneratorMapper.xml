@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.chiwooplatform.gen.dam.mapper.GeneratorMapper">
+    <select id="getColumnsMeta" parameterType="map"
+        resultType="org.chiwooplatform.gen.model.TableColumnMeta"><![CDATA[
+SELECT  A.COLUMN_NAME,
+        C.COMMENTS AS COMMENTS,
+        CASE
+            WHEN DATA_TYPE = 'VARCHAR2' THEN 'VARCHAR'
+            WHEN DATA_TYPE = 'NUMBER' THEN 'NUMBER'
+            ELSE DATA_TYPE
+        END AS TYPE,
+        DATA_LENGTH    AS COLUMN_SIZE,
+        DATA_PRECISION AS DATA_PRECISION, 
+        DATA_SCALE     AS DATA_SCALE, 
+        CASE
+            WHEN DATA_TYPE = 'VARCHAR2' THEN 'VARCHAR'
+            WHEN DATA_TYPE = 'NUMBER' THEN 'NUMBER'
+            ELSE DATA_TYPE
+        END
+        || '(' || DATA_LENGTH || ')' AS COLUMN_TYPE,
+        CASE WHEN B.KEY = 'PK' THEN 1 ELSE 0 END AS PRIMARYKEY,
+        CASE WHEN NULLABLE = 'N' THEN 0 ELSE 1 END AS NULLABLE,
+        DATA_DEFAULT AS DEFALUT_VALUE,
+        D.COMMENTS AS TABLE_COMMENTS
+FROM    USER_TAB_COLUMNS A
+LEFT    OUTER JOIN 
+      ( SELECT  B.TABLE_NAME, 
+                B.COLUMN_NAME, 
+                'PK' AS KEY
+        FROM    USER_CONSTRAINTS C
+        INNER   JOIN USER_CONS_COLUMNS B
+        ON      C.CONSTRAINT_TYPE = 'P'
+        AND     C.CONSTRAINT_NAME = B.CONSTRAINT_NAME
+        AND     C.TABLE_NAME = B.TABLE_NAME
+        AND     C.TABLE_NAME = #{table_name,jdbcType=VARCHAR}
+      ) B
+ON      A.TABLE_NAME  = B.TABLE_NAME 
+AND     A.COLUMN_NAME = B.COLUMN_NAME
+LEFT    OUTER JOIN 
+      ( SELECT  COLUMN_NAME, 
+                COMMENTS
+        FROM    USER_COL_COMMENTS
+        WHERE   TABLE_NAME = #{table_name,jdbcType=VARCHAR}
+      ) C
+ON      A.COLUMN_NAME = C.COLUMN_NAME
+INNER   JOIN USER_TAB_COMMENTS D
+ON      D.TABLE_NAME = A.TABLE_NAME
+WHERE   A.TABLE_NAME = #{table_name,jdbcType=VARCHAR}
+ORDER BY COLUMN_ID
+]]></select>
+</mapper>

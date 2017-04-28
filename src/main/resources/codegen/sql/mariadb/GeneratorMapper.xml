@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.chiwooplatform.gen.dam.mapper.GeneratorMapper">
+    <select id="getColumnsMeta" parameterType="map"
+        resultType="org.chiwooplatform.gen.model.TableColumnMeta"><![CDATA[
+select  c.column_name,
+        c.column_comment as comments,
+        case
+            when data_type = 'varchar' THEN 'VARCHAR'
+            when data_type = 'tinyint' THEN 'NUMBER'
+            when data_type = 'smallint' THEN 'NUMBER'
+            when data_type = 'mediumint' THEN 'NUMBER'
+            when data_type = 'int' THEN 'NUMBER'
+            when data_type = 'integer' THEN 'NUMBER'
+            when data_type = 'bigint' THEN 'NUMBER'
+            when data_type = 'decimal' THEN 'NUMBER'
+            when data_type = 'float' THEN 'NUMBER'
+            when data_type = 'double' THEN 'NUMBER'
+            when data_type = 'decimal' THEN 'NUMBER'
+            else data_type
+        end as "type",
+        c.character_maximum_length as column_size,
+        c.numeric_precision as data_precision, 
+        c.numeric_scale     as data_scale, 
+        case when c.column_key = 'PRI' 
+          then 1 
+          else 0 
+        end as primarykey,
+        case when c.is_nullable = 'NO' 
+          then 0
+          else 1
+        end as nullable,
+        c.column_default as defaultValue,
+      ( select t.table_comment
+        from   INFORMATION_SCHEMA.`TABLES` t
+        where  t.table_name = c.table_name
+        and    t.table_schema = c.table_schema
+      ) as table_comments
+from    INFORMATION_SCHEMA.COLUMNS c
+where   c.table_schema = schema() 
+and     c.table_name = #{table_name,jdbcType=VARCHAR}
+order by ordinal_position
+]]></select>
+</mapper>
