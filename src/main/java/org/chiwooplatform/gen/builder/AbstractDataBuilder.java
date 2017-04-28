@@ -21,40 +21,44 @@ public abstract class AbstractDataBuilder
     protected String jdbcType( String colType ) {
         String jdbcType = null;
         switch ( colType ) {
+            case "Date":
             case "DATETIME":
                 jdbcType = "TIMESTAMP";
                 break;
+            case "String":
+            case "VARCHAR":
             case "VARCHAR2":
                 jdbcType = "VARCHAR";
                 break;
             case "NUMBER":
+            case "Float":
+            case "Integer":
+            case "Long":
+            case "Double":
+            case "java.math.BigDecimal":
                 jdbcType = "INTEGER";
                 break;
             default:
-                jdbcType = colType;
+                jdbcType = "VARCHAR";
                 break;
         }
         return jdbcType;
     }
 
-    protected String parameterType( List<TableColumnMeta> primaryKeys ) {
+    protected String parameterType( List<Attribute>   primaryKeys ) {
         if ( primaryKeys.size() < 1 ) {
             return "string";
         } else if ( primaryKeys.size() > 1 ) {
             return "map";
         }
-        TableColumnMeta cmeta = primaryKeys.get( 0 );
-        String ctype = jdbcType( cmeta.getType() );
-        String paramType = null;
-        switch ( ctype ) {
-            case "INTEGER":
-                paramType = "integer";
-                break;
+        Attribute attr = primaryKeys.get( 0 );
+        String javaType = attr.getType();
+        switch ( javaType ) {
+            case "Integer":
+                return "integer";
             default:
-                paramType = "string";
-                break;
+                return "string";
         }
-        return paramType;
     }
 
     private boolean isUserColumn( final String column ) {
@@ -200,6 +204,10 @@ public abstract class AbstractDataBuilder
         attr.setType( javaType );
         attr.setValue( defaultValue );
         attr.setAssertValue( changedValue( javaType, defaultValue ) );
+        attr.setColumn( col.getColumn_name().toLowerCase() );
+        attr.setNullable( col.isNullable() );
+        attr.setPrimaryKey( col.isPrimarykey() );
+        attr.setComment( col.getComments() );
         return attr;
     }
 

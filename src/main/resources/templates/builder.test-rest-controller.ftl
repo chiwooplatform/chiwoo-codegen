@@ -15,6 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import java.util.Date;
+
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
@@ -31,6 +33,8 @@ import org.junit.runners.MethodSorters;
 @ActiveProfiles(profiles = { /* "local", "dev" */ })
 public class ${restName}Test
     extends AbstractControllerTests<${domainName}> {
+
+    private final Date CURRENT_TIMESTAMP = new Date();
 
 <#list primaryAttrs as k>
     private ${k.type} ${k.nm} = ${k.val};
@@ -58,7 +62,7 @@ ${value('test.model')}
         logger.debug( "content: {}", content );
         final String uri = ${restName}.BASE_URI;
         ResultActions actions = mockMvc.perform( post( uri ).contentType( MediaType.APPLICATION_JSON )
-                                                            .header( Constants.AUTH_TOKEN, token( token() ) )
+                                                            .header( Constants.AUTH_TOKEN, token() )
                                                             .content( content ) );
         actions.andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8 ) );
         actions.andExpect( status().isCreated() );
@@ -81,7 +85,7 @@ ${value('test.model')}
                                                                  .header( Constants.AUTH_TOKEN, token() ) );
         actions.andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8 ) );
         actions.andExpect( status().isOk() );
-        // actions.andExpect( jsonPath( "$.${primaryAttr.nm}", equalTo( this.${primaryAttr.nm} ) ) );
+        actions.andExpect( jsonPath( "$.${primaryAttr.nm}", equalTo( this.${primaryAttr.nm} ) ) );
         actions.andDo( print() );
     }
 
@@ -126,7 +130,7 @@ ${value('test.model')}
         ${k.type} ${k.nm} = this.${k.nm};
 </#list>
         ResultActions actions = mockMvc.perform( put( uri${pathVars} ).contentType( MediaType.APPLICATION_JSON )
-                                                            .header( Constants.AUTH_TOKEN, token( token() ) )
+                                                            .header( Constants.AUTH_TOKEN, token() )
                                                             .content( content ) );
         actions.andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8 ) );
         actions.andExpect( status().isOk() );

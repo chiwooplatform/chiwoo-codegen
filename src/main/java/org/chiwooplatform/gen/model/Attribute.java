@@ -12,6 +12,14 @@ public class Attribute {
 
     private String assertValue;
 
+    private String column;
+
+    private boolean nullable;
+
+    private boolean primaryKey;
+
+    private String comment;
+
     /**
      * @return the nm
      */
@@ -96,5 +104,64 @@ public class Attribute {
      */
     public void setAssertValue( String assertValue ) {
         this.assertValue = assertValue;
+    }
+
+    /**
+     * @return the column
+     */
+    public String getColumn() {
+        return column;
+    }
+
+    /**
+     * @param column the column to set
+     */
+    public void setColumn( String column ) {
+        this.column = column;
+    }
+
+    /**
+     * @return the nullable
+     */
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    /**
+     * @param nullable the nullable to set
+     */
+    public void setNullable( boolean nullable ) {
+        this.nullable = nullable;
+    }
+
+    /**
+     * @return the primaryKey
+     */
+    public boolean isPrimaryKey() {
+        return primaryKey;
+    }
+
+    /**
+     * @param primaryKey the primaryKey to set
+     */
+    public void setPrimaryKey( boolean primaryKey ) {
+        this.primaryKey = primaryKey;
+    }
+
+    /**
+     * @return the comment
+     */
+    public String getComment() {
+        if ( comment == null ) {
+            return "";
+        }
+        return comment;
+    }
+
+    /**
+     * @param comment the comment to set
+     */
+    public void setComment( String comment ) {
+        this.comment = comment;
     }
 }

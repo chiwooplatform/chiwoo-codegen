@@ -1,4 +1,4 @@
-<#assign packageName=isNotEmpty( pkgNm )?then( "${basePackage}.dam.mapper.${pkgNm}", "${basePackage}.dam.mapper" ) />
+<#assign packageName=isNotEmpty( pkgNm )?then( "${basePackage}.model.${pkgNm}", "${basePackage}.model" ) />
 <#assign interfaceClazz=isNotEmpty( mapConverClazz )?then( 
     "MapConvertable", 
     "Serializable" ) />
@@ -17,7 +17,7 @@ import java.io.Serializable;
 import ${dbmsCodeClazz};
 </#if>
 
-import ${basePackage}.Constants;
+import ${pluginPackage}.context.Constants;
 
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;

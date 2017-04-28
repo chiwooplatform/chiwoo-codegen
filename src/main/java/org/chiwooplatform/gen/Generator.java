@@ -17,10 +17,10 @@ import org.chiwooplatform.gen.builder.ControllerBuilderTemplateCallback;
 import org.chiwooplatform.gen.builder.ControllerTestBuilderTemplateCallback;
 import org.chiwooplatform.gen.builder.CopyPasteClazzTemplateCallback;
 import org.chiwooplatform.gen.builder.ModelBuilderTemplateCallback;
-import org.chiwooplatform.gen.builder.mybatis.MariaDBMapperSqlBuilderTemplateCallback;
+import org.chiwooplatform.gen.builder.mybatis.MariaSqlMapBuilderTemplateCallback;
 import org.chiwooplatform.gen.builder.mybatis.MybatisMapperBuilderTemplateCallback;
 import org.chiwooplatform.gen.builder.mybatis.MybatisTestMapperBuilderTemplateCallback;
-import org.chiwooplatform.gen.builder.mybatis.OracleMapperSqlBuilderTemplateCallback;
+import org.chiwooplatform.gen.builder.mybatis.OracleSqlMapBuilderTemplateCallback;
 import org.chiwooplatform.gen.config.ValueHolder;
 import org.chiwooplatform.gen.dam.mapper.GeneratorMapper;
 import org.chiwooplatform.gen.model.TableColumnMeta;
@@ -112,21 +112,21 @@ public class Generator {
         generatedSources.add( String.format( "\n\nMapper: %s", data ) );
     }
 
-    protected void generateSqlMapper()
+    public void generateSqlMapper()
         throws Exception {
         doPreprocess();
         String dir = "oracle";
         AbstractBuilder builder = null;
         switch ( holder.dbms() ) {
             case ORACLE:
-                builder = new OracleMapperSqlBuilderTemplateCallback( holder );
+                builder = new OracleSqlMapBuilderTemplateCallback( holder );
                 break;
             case MARIADB:
-                builder = new MariaDBMapperSqlBuilderTemplateCallback( holder );
+                builder = new MariaSqlMapBuilderTemplateCallback( holder );
                 dir = "mariadb";
                 break;
             default:
-                builder = new OracleMapperSqlBuilderTemplateCallback( holder );
+                builder = new OracleSqlMapBuilderTemplateCallback( holder );
         }
         String data = builder.build();
         String filepath = targetDir() + String.format( "/sql/%s/%sMapper.xml", dir, holder.getDomainName() );
@@ -183,7 +183,7 @@ public class Generator {
         String filepath = holder.targetTestDir()
             + String.format( "/dam/mapper/%s/%sMapperTest.java", holder.pkgName(), holder.getDomainName() );
         if ( generateRealPath ) {
-            filepath = holder.baseTestJavaDir()
+            filepath = holder.testJavaPackageDir()
                 + String.format( "/dam/mapper/%s/%sMapperTest.java", holder.pkgName(), holder.getDomainName() );
         }
         if ( new File( filepath ).exists() ) {
@@ -206,7 +206,7 @@ public class Generator {
         String filepath = holder.targetTestDir()
             + String.format( "/rest/%s/%sControllerTest.java", holder.pkgName(), holder.getDomainName() );
         if ( generateRealPath ) {
-            filepath = holder.baseTestJavaDir()
+            filepath = holder.testJavaPackageDir()
                 + String.format( "/rest/%s/%sControllerTest.java", holder.pkgName(), holder.getDomainName() );
         }
         if ( new File( filepath ).exists() ) {

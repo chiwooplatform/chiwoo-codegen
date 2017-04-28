@@ -14,18 +14,36 @@ import org.chiwooplatform.gen.model.TableColumnMeta;
 
 import freemarker.template.Template;
 
-public class MariaDBMapperSqlBuilderTemplateCallback
+public class OracleSqlMapBuilderTemplateCallback
     extends AbstractDataBuilder {
 
-    protected final String CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP";
-
-    public MariaDBMapperSqlBuilderTemplateCallback( ValueHolder valueHolder ) {
+    public OracleSqlMapBuilderTemplateCallback( ValueHolder valueHolder ) {
         super( valueHolder );
     }
 
     private List<TableColumnMeta> _columnsMeta;
 
     private List<TableColumnMeta> _keys = new LinkedList<>();
+
+    private String parameterType() {
+        if ( _keys.size() < 1 ) {
+            return "string";
+        } else if ( _keys.size() > 1 ) {
+            return "map";
+        }
+        TableColumnMeta cmeta = _keys.get( 0 );
+        String ctype = super.jdbcType( cmeta.getType() );
+        String paramType = null;
+        switch ( ctype ) {
+            case "INTEGER":
+                paramType = "integer";
+                break;
+            default:
+                paramType = "string";
+                break;
+        }
+        return paramType;
+    }
 
     private String saveOrUpdateSQL() {
         StringBuilder builder = new StringBuilder();
@@ -293,7 +311,7 @@ public class MariaDBMapperSqlBuilderTemplateCallback
 
     private String selectKey() {
         StringBuilder builder = new StringBuilder();
-        builder.append( "<selectKey keyProperty=" ).append( CM ).append( "existsYn" ).append( CM )
+        builder.append( NLBS8 ).append( "<selectKey keyProperty=" ).append( CM ).append( "existsYn" ).append( CM )
                .append( " resultType=" ).append( CM ).append( holder.abbrName() ).append( CM ).append( " order=" )
                .append( CM ).append( "BEFORE" ).append( CM ).append( "<![CDATA[" );
         builder.append( NL ).append( "select  case" );
@@ -360,7 +378,7 @@ public class MariaDBMapperSqlBuilderTemplateCallback
                 _keys.add( col );
             }
         }
-        holder.getContext().add( "mapper.parameterType", parameterType( _keys ) );
+        holder.getContext().add( "mapper.parameterType", parameterType() );
         holder.getContext().add( "mapper.selectKey", selectKey() );
         holder.getContext().add( "mapper.saveOrUpdate", saveOrUpdateSQL() );
         holder.getContext().add( "mapper.insert", insertSQL() );

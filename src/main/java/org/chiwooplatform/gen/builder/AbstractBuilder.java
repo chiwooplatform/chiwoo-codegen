@@ -44,16 +44,18 @@ public abstract class AbstractBuilder {
         // int size = col.getColumn_size();
         Integer precision = col.getData_precision();
         Integer scale = col.getData_scale();
+        String name = col.getColumn_name().toLowerCase();
         String javaType = null;
         switch ( type ) {
             case "TIME":
             case "DATE":
             case "DATETIME":
+            case "TIMESTAMP":
                 javaType = "Date";
                 break;
-            case "TIMESTAMP":
-                javaType = "java.sql.Timestamp";
-                break;
+            //case "TIMESTAMP":
+            //    javaType = "java.sql.Timestamp";
+            //    break;
             case "LONG":
                 javaType = "Long";
                 break;
@@ -61,6 +63,8 @@ public abstract class AbstractBuilder {
                 if ( precision <= 10 ) {
                     if ( scale > 0 ) {
                         javaType = "Float";
+                    } else if ( name.endsWith( "_yn" ) && !col.isNullable() ) {
+                        javaType = "Boolean";
                     } else {
                         javaType = "Integer";
                     }

@@ -32,7 +32,7 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Transactional
 @ActiveProfiles(profiles = { /* "local", "dev" */ })
-public class ${domainName}MapperTests
+public class ${domainName}MapperTest
     extends AbstractMapperTests<${domainName}> {
 
     private Date CURRENT_TIMESTAMP = new Date();

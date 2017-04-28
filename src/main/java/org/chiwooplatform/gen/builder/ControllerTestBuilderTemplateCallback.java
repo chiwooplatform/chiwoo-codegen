@@ -43,7 +43,7 @@ public class ControllerTestBuilderTemplateCallback
     public String build()
         throws Exception {
         List<TableColumnMeta> columnsMeta = holder.columnsMeta();
-        columnsMeta.add( tempKey() ); // 테스트 목적 임.
+        // columnsMeta.add( tempKey() ); // 테스트 목적 임.
         List<TableColumnMeta> primaryKeys = primaryColumns( columnsMeta );
         List<Attribute> primaryAttrs = primaryAttrs( primaryKeys );
         setLocalVariables( primaryAttrs );
@@ -61,20 +61,19 @@ public class ControllerTestBuilderTemplateCallback
         return tval;
     }
 
-    protected TableColumnMeta tempKey() {
-        TableColumnMeta c = new TableColumnMeta();
-        c.setColumn_name( "uuid" );
-        c.setColumn_size( 100 );
-        c.setComments( "임시 아이디" );
-        c.setData_precision( null );
-        c.setData_scale( null );
-        c.setDefaultValue( null );
-        c.setNullable( false );
-        c.setPrimarykey( true );
-        c.setType( "String" );
-        return c;
-    }
-
+    //    protected TableColumnMeta tempKey() {
+    //        TableColumnMeta c = new TableColumnMeta();
+    //        c.setColumn_name( "uuid" );
+    //        c.setColumn_size( 100 );
+    //        c.setComments( "임시 아이디" );
+    //        c.setData_precision( null );
+    //        c.setData_scale( null );
+    //        c.setDefaultValue( null );
+    //        c.setNullable( false );
+    //        c.setPrimarykey( true );
+    //        c.setType( "String" );
+    //        return c;
+    //    }
     public List<TableColumnMeta> getColumnsMeta() {
         return holder.columnsMeta();
     }

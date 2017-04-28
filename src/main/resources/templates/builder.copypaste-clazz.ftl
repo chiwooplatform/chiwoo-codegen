@@ -70,8 +70,8 @@ public class ${serviceName} {
     }
 
     @Transactional
-    public void removeAt${domainName}Mapper( ${domainName} ${domainNm} ) {
-        ${domainNm}Mapper.remove( ${domainNm} );
+    public void removeAt${domainName}Mapper( Map<String, Object> param ) {
+        ${domainNm}Mapper.remove( param );
     }
 
     @Transactional

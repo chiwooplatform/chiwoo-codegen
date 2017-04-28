@@ -231,6 +231,10 @@ public class ValueHolder {
         return baseJavaDir() + basePackageDir();
     }
 
+    public String testJavaPackageDir() {
+        return baseTestJavaDir() + basePackageDir();
+    }
+
     public String getMapConverClazz() {
         return props.getMapConverClazz();
     }

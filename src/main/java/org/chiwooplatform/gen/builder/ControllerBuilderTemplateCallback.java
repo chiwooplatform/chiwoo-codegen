@@ -103,8 +103,8 @@ public class ControllerBuilderTemplateCallback
 
     public String build()
         throws Exception {
-        List<TableColumnMeta> _columnsMeta = getColumnsMeta();
-        for ( TableColumnMeta col : _columnsMeta ) {
+        List<TableColumnMeta> columnsMeta = getColumnsMeta();
+        for ( TableColumnMeta col : columnsMeta ) {
             if ( col.isPrimarykey() ) {
                 _keys.add( col );
             }
@@ -127,23 +127,22 @@ public class ControllerBuilderTemplateCallback
         return tval;
     }
 
-    protected TableColumnMeta tempKey() {
-        TableColumnMeta c = new TableColumnMeta();
-        c.setColumn_name( "temp_seq" );
-        c.setColumn_size( 100 );
-        c.setComments( "임시 번호" );
-        c.setData_precision( null );
-        c.setData_scale( null );
-        c.setDefaultValue( null );
-        c.setNullable( false );
-        c.setPrimarykey( true );
-        c.setType( "LONG" );
-        return c;
-    }
-
+    //    private TableColumnMeta tempKey() {
+    //        TableColumnMeta c = new TableColumnMeta();
+    //        c.setColumn_name( "temp_seq" );
+    //        c.setColumn_size( 100 );
+    //        c.setComments( "임시 번호" );
+    //        c.setData_precision( null );
+    //        c.setData_scale( null );
+    //        c.setDefaultValue( null );
+    //        c.setNullable( false );
+    //        c.setPrimarykey( true );
+    //        c.setType( "LONG" );
+    //        return c;
+    //    }
     public List<TableColumnMeta> getColumnsMeta() {
         this._columnsMeta = holder.columnsMeta();
-        this._columnsMeta.add( tempKey() ); // 테스트 목적 임.
+        // this._columnsMeta.add( tempKey() ); // 테스트 목적 임.
         return _columnsMeta;
     }
 }

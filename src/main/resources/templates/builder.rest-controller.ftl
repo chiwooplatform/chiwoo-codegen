@@ -150,7 +150,6 @@ public class ${domainName}Controller {
     public ResponseEntity<?> remove( @RequestHeader(Constants.AUTH_TOKEN) String token,${pathVars}
                                      @RequestParam Map<String, Object> param ) {${buildParam}
         ${serviceNm}.removeAt${domainName}Mapper( param );
-        response.set${domainName}( ${domainNm} );
         return new ResponseEntity<>( HttpStatus.NO_CONTENT );
     }
 

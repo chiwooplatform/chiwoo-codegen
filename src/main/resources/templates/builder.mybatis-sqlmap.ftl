@@ -15,8 +15,8 @@ ${context.value("mapper.saveOrUpdate")}
 
 ${context.value("mapper.selectKey")}
     -->
-    <insert id="add" parameterType="${modelAlias}"><![CDATA[${
-context.value("mapper.insert")}
+    <insert id="add" parameterType="${modelAlias}"><![CDATA[
+${context.value("mapper.insert")}
  ]]></insert>
 
     <update id="modify" parameterType="${modelAlias}"><![CDATA[
