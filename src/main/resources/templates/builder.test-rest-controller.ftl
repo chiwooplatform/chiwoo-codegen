@@ -21,8 +21,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
 
-import org.chiwooplatform.context.Constants;
-import org.chiwooplatform.simple.AbstractControllerTests;
+import ${pluginPackage}.context.Constants;
+import ${basePackage}.AbstractControllerTests;
 import ${modelClazz};
 
 import org.junit.FixMethodOrder;
@@ -85,7 +85,7 @@ ${value('test.model')}
                                                                  .header( Constants.AUTH_TOKEN, token() ) );
         actions.andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8 ) );
         actions.andExpect( status().isOk() );
-        actions.andExpect( jsonPath( "$.${primaryAttr.nm}", equalTo( this.${primaryAttr.nm} ) ) );
+        actions.andExpect( jsonPath( "$.${domainNm}.${primaryAttr.nm}", equalTo( this.${primaryAttr.nm} ) ) );
         actions.andDo( print() );
     }
 
@@ -109,7 +109,7 @@ ${value('test.model')}
                                                          );
         actions.andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8 ) );
         actions.andExpect( status().isOk() );
-        // actions.andExpect( jsonPath( "$[0].${primaryAttr.nm}", equalTo( this.${primaryAttr.nm}  ) ) );
+        // actions.andExpect( jsonPath( "$.${domainNm}s.[0].${primaryAttr.nm}", equalTo( this.${primaryAttr.nm}  ) ) );
         actions.andDo( print() );
     }
 
@@ -134,29 +134,11 @@ ${value('test.model')}
                                                             .content( content ) );
         actions.andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8 ) );
         actions.andExpect( status().isOk() );
-        // actions.andExpect( jsonPath( "$.${primaryAttr.nm}", equalTo( this.${primaryAttr.nm} ) ) );
+        // actions.andExpect( jsonPath( "$.${domainNm}.${assertAttr.nm}", equalTo( ${assertAttr.assertVal} ) ) );
         actions.andDo( print() );
     }
 
-    /**
-     * {@link ${restName}#remove}
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void ut1005_remove()
-        throws Exception {
-        final String uri = ${restName}.BASE_URI + "${value('test.uriPath')!''}";
-<#list primaryAttrs as k>
-        ${k.type} ${k.nm} = this.${k.nm};
-</#list>
-        ResultActions actions = mockMvc.perform( delete( uri${pathVars} ).contentType( MediaType.APPLICATION_JSON )
-                                                                 .header( Constants.AUTH_TOKEN, token() ) );
-        actions.andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8 ) );
-        actions.andExpect( status().isNoContent() );
-        actions.andDo( print() );
-    }
-
+<#if context.value("supportEnableDisable")>
     /**
      * {@link ${restName}#enable}
      * 
@@ -171,7 +153,6 @@ ${value('test.model')}
 </#list>
         ResultActions actions = mockMvc.perform( put( uri${pathVars} ).contentType( MediaType.APPLICATION_JSON )
                                                                  .header( Constants.AUTH_TOKEN, token() ) );
-        actions.andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8 ) );
         actions.andExpect( status().isNoContent() );
         actions.andDo( print() );
     }
@@ -190,7 +171,25 @@ ${value('test.model')}
 </#list>
         ResultActions actions = mockMvc.perform( put( uri${pathVars} ).contentType( MediaType.APPLICATION_JSON )
                                                                  .header( Constants.AUTH_TOKEN, token() ) );
-        actions.andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8 ) );
+        actions.andExpect( status().isNoContent() );
+        actions.andDo( print() );
+    }
+
+</#if>
+    /**
+     * {@link ${restName}#remove}
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void ut1009_remove()
+        throws Exception {
+        final String uri = ${restName}.BASE_URI + "${value('test.uriPath')!''}";
+<#list primaryAttrs as k>
+        ${k.type} ${k.nm} = this.${k.nm};
+</#list>
+        ResultActions actions = mockMvc.perform( delete( uri${pathVars} ).contentType( MediaType.APPLICATION_JSON )
+                                                                 .header( Constants.AUTH_TOKEN, token() ) );
         actions.andExpect( status().isNoContent() );
         actions.andDo( print() );
     }

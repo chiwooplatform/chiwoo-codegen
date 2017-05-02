@@ -45,7 +45,7 @@ public abstract class AbstractDataBuilder
         return jdbcType;
     }
 
-    protected String parameterType( List<Attribute>   primaryKeys ) {
+    protected String parameterType( List<Attribute> primaryKeys ) {
         if ( primaryKeys.size() < 1 ) {
             return "string";
         } else if ( primaryKeys.size() > 1 ) {
@@ -252,5 +252,15 @@ public abstract class AbstractDataBuilder
         TableColumnMeta col = assertionColumn( columnsMeta );
         Attribute attr = attribute( col );
         return attr;
+    }
+
+    protected boolean supportEnableDisable( List<TableColumnMeta> columns ) {
+        for ( TableColumnMeta col : columns ) {
+            final String column = col.getColumn_name().toLowerCase();
+            if ( "use_yn".equals( column ) || "useyn".equals( column ) ) {
+                return true;
+            }
+        }
+        return false;
     }
 }

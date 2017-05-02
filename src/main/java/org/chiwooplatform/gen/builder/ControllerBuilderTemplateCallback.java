@@ -1,21 +1,17 @@
 package org.chiwooplatform.gen.builder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import org.chiwooplatform.gen.config.ValueHolder;
+import org.chiwooplatform.gen.model.Attribute;
 import org.chiwooplatform.gen.model.TableColumnMeta;
 
 import freemarker.template.Template;
 
 public class ControllerBuilderTemplateCallback
-    extends AbstractBuilder {
-
-    private List<TableColumnMeta> _columnsMeta;
-
-    private List<TableColumnMeta> _keys = new ArrayList<>();
+    extends AbstractDataBuilder {
 
     public ControllerBuilderTemplateCallback( ValueHolder valueHolder ) {
         super( valueHolder );
@@ -29,25 +25,20 @@ public class ControllerBuilderTemplateCallback
 
     private String buildParam;
 
-    private String masterKey = null;
-
-    private void setLocalVariables() {
+    private void setLocalVariables( List<Attribute> attrs ) {
         StringBuffer paths = new StringBuffer();
         StringBuffer pathVars = new StringBuffer();
         StringBuffer pathParam = new StringBuffer();
         StringBuffer addParam = new StringBuffer();
-        for ( TableColumnMeta key : _keys ) {
-            String attrName = inflector.lowerCamelCase( key.getColumn_name().toLowerCase(), '_' );
-            if ( this.masterKey == null ) {
-                this.masterKey = attrName;
-            }
-            paths.append( "/" ).append( "{" ).append( attrName ).append( "}" );
-            pathVars.append( " @PathVariable(" ).append( CM ).append( attrName ).append( CM ).append( ") " );
-            pathVars.append( javaType( key ) ).append( " " ).append( attrName ).append( "," );
-            pathParam.append( NL ).append( "     * @param " ).append( attrName )
+        for ( Attribute key : attrs ) {
+            String nm = key.getNm();
+            paths.append( "/" ).append( "{" ).append( nm ).append( "}" );
+            pathVars.append( " @PathVariable(" ).append( CM ).append( nm ).append( CM ).append( ") " );
+            pathVars.append( key.getType() ).append( " " ).append( nm ).append( "," );
+            pathParam.append( NL ).append( "     * @param " ).append( nm )
                      .append( " is the URI path variable for identifying resource." );
             addParam.append( NL ).append( "        param.put" )
-                    .append( String.format( "( %s%s%s, %s );", CM, attrName, CM, attrName ) );
+                    .append( String.format( "( %s%s%s, %s );", CM, nm, CM, nm ) );
         }
         this.uriPath = paths.toString();
         this.pathVars = pathVars.toString();
@@ -104,12 +95,8 @@ public class ControllerBuilderTemplateCallback
     public String build()
         throws Exception {
         List<TableColumnMeta> columnsMeta = getColumnsMeta();
-        for ( TableColumnMeta col : columnsMeta ) {
-            if ( col.isPrimarykey() ) {
-                _keys.add( col );
-            }
-        }
-        setLocalVariables();
+        List<Attribute> primaryAttrs = primaryAttrs( primaryColumns( columnsMeta ) );
+        setLocalVariables( primaryAttrs );
         holder.getContext().add( "controller.uriPath", this.uriPath );
         holder.getContext().add( "controller.pathVars", this.pathVars );
         holder.getContext().add( "controller.pathParams", this.pathParams );
@@ -121,6 +108,7 @@ public class ControllerBuilderTemplateCallback
         holder.getContext().add( "controller.mapping.remove", requestMapping( OperType.REMOVE, uriPath ) );
         holder.getContext().add( "controller.mapping.enable", requestMapping( OperType.ENABLE, uriPath ) );
         holder.getContext().add( "controller.mapping.disable", requestMapping( OperType.DISABLE, uriPath ) );
+        holder.getContext().add( "supportEnableDisable", supportEnableDisable( columnsMeta ) );
         Template t = holder.freemarkerConfigure().getTemplate( "builder.rest-controller.ftl" );
         String tval = FreeMarkerTemplateUtils.processTemplateIntoString( t, holder );
         logger.debug( "tval: {}", tval );
@@ -141,8 +129,8 @@ public class ControllerBuilderTemplateCallback
     //        return c;
     //    }
     public List<TableColumnMeta> getColumnsMeta() {
-        this._columnsMeta = holder.columnsMeta();
+        // this._columnsMeta = holder.columnsMeta();
         // this._columnsMeta.add( tempKey() ); // 테스트 목적 임.
-        return _columnsMeta;
+        return holder.columnsMeta();
     }
 }

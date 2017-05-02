@@ -22,7 +22,7 @@ ${context.value("mapper.insert")}
     <update id="modify" parameterType="${modelAlias}"><![CDATA[
 ${context.value("mapper.update")}
  ]]></update>
-<#if isNotEmpty( "${context.value('mapper.enable')!}" )>
+<#if context.value("supportEnableDisable")>
 
     <update id="enable" parameterType="${paramType}"><![CDATA[
 ${context.value("mapper.enable")}

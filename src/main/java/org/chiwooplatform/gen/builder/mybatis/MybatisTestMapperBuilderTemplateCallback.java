@@ -36,6 +36,7 @@ public class MybatisTestMapperBuilderTemplateCallback
         holder.getContext().add( "test.assertAttr", assertionAttr );
         holder.getContext().add( "test.primaryAttrs", primaryAttrs );
         holder.getContext().add( "test.model", model( columnsMeta ) );
+        holder.getContext().add( "supportEnableDisable", supportEnableDisable( columnsMeta ));
         Template t = holder.freemarkerConfigure().getTemplate( "builder.test-mybatis-mapper.ftl" );
         String tval = FreeMarkerTemplateUtils.processTemplateIntoString( t, holder );
         logger.debug( "tval: {}", tval );

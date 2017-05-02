@@ -55,18 +55,24 @@ public class ${serviceName} {
     }
 
     @Transactional
-    public void saveOrUpdateAt${domainName}Mapper( ${domainName} ${domainNm} ) {
+    public ${domainName} saveOrUpdateAt${domainName}Mapper( ${domainName} ${domainNm} ) {
         ${domainNm}Mapper.saveOrUpdate( ${domainNm} );
+        ${domainNm} = ${domainNm}Mapper.get( ${domainNm} );
+        return ${domainNm};
     }
 
     @Transactional
-    public void addAt${domainName}Mapper( ${domainName} ${domainNm} ) {
+    public ${domainName} addAt${domainName}Mapper( ${domainName} ${domainNm} ) {
         ${domainNm}Mapper.add( ${domainNm} );
+        ${domainNm} = ${domainNm}Mapper.get( ${domainNm} );
+        return ${domainNm};
     }
 
     @Transactional
-    public void modifyAt${domainName}Mapper( ${domainName} ${domainNm} ) {
+    public ${domainName} modifyAt${domainName}Mapper( ${domainName} ${domainNm} ) {
         ${domainNm}Mapper.modify( ${domainNm} );
+        ${domainNm} = ${domainNm}Mapper.get( ${domainNm} );
+        return ${domainNm};
     }
 
     @Transactional
@@ -159,4 +165,3 @@ public class ResponseMessage
     }
 
 }
-

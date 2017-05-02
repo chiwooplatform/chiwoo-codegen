@@ -55,6 +55,7 @@ public class ControllerTestBuilderTemplateCallback
         holder.getContext().add( "test.model", model( columnsMeta ) );
         holder.getContext().add( "test.uriPath", this.uriPath );
         holder.getContext().add( "test.pathVars", this.pathVars );
+        holder.getContext().add( "supportEnableDisable", supportEnableDisable( columnsMeta ));
         Template t = holder.freemarkerConfigure().getTemplate( "builder.test-rest-controller.ftl" );
         String tval = FreeMarkerTemplateUtils.processTemplateIntoString( t, holder );
         logger.debug( "tval: {}", tval );

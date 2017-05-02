@@ -349,6 +349,7 @@ public class MariaSqlMapBuilderTemplateCallback
         holder.getContext().add( "mapper.query", selectListSQL( attrs ) );
         holder.getContext().add( "mapper.enable", enableDisableSQL( attrs, true ) );
         holder.getContext().add( "mapper.disable", enableDisableSQL( attrs, false ) );
+        holder.getContext().add( "supportEnableDisable", supportEnableDisable( columnsMeta ));
         Template t = holder.freemarkerConfigure().getTemplate( "builder.mybatis-sqlmap.ftl" );
         String tval = FreeMarkerTemplateUtils.processTemplateIntoString( t, holder );
         logger.debug( "tval: {}", tval );

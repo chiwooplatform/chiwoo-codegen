@@ -152,6 +152,7 @@ public class ${domainName}Controller {
         ${serviceNm}.removeAt${domainName}Mapper( param );
         return new ResponseEntity<>( HttpStatus.NO_CONTENT );
     }
+<#if context.value("supportEnableDisable")>
 
     /**
      * Enable the '${domainNm}' data.
@@ -185,4 +186,6 @@ public class ${domainName}Controller {
         ${serviceNm}.enableAt${domainName}Mapper( param );
         return new ResponseEntity<>( HttpStatus.NO_CONTENT );
     }
+</#if>
+
 }
